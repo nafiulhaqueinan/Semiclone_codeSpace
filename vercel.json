@@ -1,0 +1,13 @@
+
+{
+"version": 2,
+"public": true,
+"builds": [
+{ "src": "api/compile.js", "use": "@vercel/node" },
+{ "src": "public/index.html", "use": "@vercel/static" }
+],
+"routes": [
+{ "src": "/api/compile", "dest": "/api/compile.js" },
+{ "src": "/(.*)", "dest": "/public/index.html" }
+]
+}

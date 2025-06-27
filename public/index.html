@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Coding Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+        }
+        .code-editor {
+            font-family: 'Fira Code', monospace;
+            background-color: #1F2937; /* bg-gray-800 */
+            color: #E5E7EB; /* text-gray-200 */
+            border-color: #374151; /* border-gray-700 */
+            min-height: 400px;
+        }
+        .panel {
+            background-color: #1F2937; /* bg-gray-800 */
+            border-color: #374151; /* border-gray-700 */
+            color: #D1D5DB; /* text-gray-300 */
+        }
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary {
+            background-color: #3B82F6; /* bg-blue-600 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2563EB; /* bg-blue-700 */
+        }
+        .btn-secondary {
+            background-color: #4B5563; /* bg-gray-600 */
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #374151; /* bg-gray-700 */
+        }
+        .btn-success {
+            background-color: #16A34A; /* bg-green-600 */
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: #15803D; /* bg-green-700 */
+        }
+        #notification {
+            transition: opacity 0.5s, transform 0.5s;
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        #notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        #output-panel.error {
+            color: #F87171; /* text-red-400 */
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <div class="container mx-auto p-4 max-w-7xl">
+
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-200">My Coding Platform</h1>
+            <div>
+                <select id="language-select" class="bg-gray-700 border border-gray-600 rounded-md px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="cpp">C++</option>
+                    <option value="java">Java</option>
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Left Side: Code Editor -->
+            <div class="lg:col-span-2">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-xl font-semibold text-gray-300">Code Editor</h2>
+                    <button id="run-btn" class="btn btn-primary font-semibold py-2 px-6 rounded-lg shadow-md flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Run
+                    </button>
+                </div>
+                <textarea id="code-editor" class="code-editor w-full p-4 border rounded-lg resize-y focus:outline-none focus:ring-2 focus:ring-blue-500" spellcheck="false"></textarea>
+            </div>
+
+            <!-- Right Side: I/O and Templates -->
+            <div class="flex flex-col gap-6">
+                <!-- Templates -->
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-300 mb-2">Templates</h2>
+                    <div class="panel p-4 border rounded-lg">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="font-medium text-gray-300">Template 1</span>
+                                <div class="flex gap-2">
+                                    <button class="btn btn-secondary text-sm py-1 px-3 rounded-md" onclick="saveTemplate(1)">Save</button>
+                                    <button class="btn btn-success text-sm py-1 px-3 rounded-md" onclick="loadTemplate(1)">Load</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-medium text-gray-300">Template 2</span>
+                                <div class="flex gap-2">
+                                    <button class="btn btn-secondary text-sm py-1 px-3 rounded-md" onclick="saveTemplate(2)">Save</button>
+                                    <button class="btn btn-success text-sm py-1 px-3 rounded-md" onclick="loadTemplate(2)">Load</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Snippets -->
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-300 mb-2">Code Snippets</h2>
+                    <div class="panel p-4 border rounded-lg">
+                        <div class="flex items-center gap-2">
+                           <select id="snippet-select" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                           <button id="insert-snippet-btn" class="btn btn-success text-sm py-2 px-4 rounded-md">Insert</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input -->
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-300 mb-2">Input</h2>
+                    <textarea id="input-panel" class="panel w-full p-4 border rounded-lg h-32 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your input here..."></textarea>
+                </div>
+
+                <!-- Output -->
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-300 mb-2">Output</h2>
+                    <pre id="output-panel" class="panel w-full p-4 border rounded-lg h-40 overflow-auto whitespace-pre-wrap" placeholder="Output will appear here..."></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-5 rounded-lg shadow-xl">
+        <p id="notification-message"></p>
+    </div>
+
+    <script>
+        // DOM Elements
+        const codeEditor = document.getElementById('code-editor');
+        const inputPanel = document.getElementById('input-panel');
+        const outputPanel = document.getElementById('output-panel');
+        const runBtn = document.getElementById('run-btn');
+        const languageSelect = document.getElementById('language-select');
+        const snippetSelect = document.getElementById('snippet-select');
+        const insertSnippetBtn = document.getElementById('insert-snippet-btn');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notification-message');
+        
+        // --- Data ---
+        const PISTON_API_URL = "https://emkc.org/api/v2/piston/execute";
+        
+        const LANGUAGE_CONFIG = {
+            cpp: { version: "10.2.0", file: "main.cpp" },
+            java: { version: "15.0.2", file: "Main.java" },
+            python: { version: "3.10.0", file: "main.py" },
+            javascript: { version: "18.15.0", file: "main.js" }
+        };
+
+        const TEMPLATE_PLACEHOLDERS = {
+            cpp: `#include <iostream>\n\nint main() {\n    // Your C++ code here\n    std::cout << "Hello, World!";\n    return 0;\n}`,
+            java: `public class Main {\n    public static void main(String[] args) {\n        // Your Java code here\n        System.out.println("Hello, World!");\n    }\n}`,
+            python: `# Your Python code here\nprint("Hello, World!")`,
+            javascript: `// Your JavaScript code here\nconsole.log("Hello, World!");`
+        };
+
+        const SNIPPETS = {
+            cpp: {
+                "CP Full": "std::ios_base::sync_with_stdio(false);\nstd::cin.tie(NULL);\n",
+                "Cp Normal": "for (int i = 0; i < n; ++i) {\n\n}",
+                "Simple": "#include <vector>\nstd::vector<int> v;",
+            },
+            java: {
+                "Scanner Input": "import java.util.Scanner;\nScanner sc = new Scanner(System.in);",
+                "BufferedReader": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nBufferedReader br = new BufferedReader(new InputStreamReader(System.in));",
+                "ArrayList": "import java.util.ArrayList;\nArrayList<String> list = new ArrayList<>();"
+            },
+            python: {
+                "Read line": "import sys\nline = sys.stdin.readline().strip()",
+                "List Comprehension": "[x for x in range(10)]",
+                "Dictionary": "my_dict = {}",
+            },
+            javascript: {
+                "Arrow Function": "const myFunction = () => {\n\n};",
+                "Fetch API": "fetch('https://api.example.com/data')\n  .then(response => response.json())\n  .then(data => console.log(data));",
+                "Map Array": "const newArray = oldArray.map(item => item * 2);"
+            }
+        };
+
+        // --- Core Functions ---
+
+        /**
+         * Executes the code using the Piston API.
+         */
+        async function runCode() {
+            const lang = languageSelect.value;
+            const code = codeEditor.value;
+            const input = inputPanel.value;
+            
+            if (!code.trim()) {
+                showNotification("Code is empty!", 'error');
+                return;
+            }
+
+            outputPanel.textContent = "Executing...";
+            outputPanel.classList.remove('error');
+            runBtn.disabled = true;
+            runBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                const config = LANGUAGE_CONFIG[lang];
+                const payload = {
+                    language: lang,
+                    version: config.version,
+                    files: [
+                        {
+                            name: config.file,
+                            content: code
+                        }
+                    ],
+                    stdin: input
+                };
+
+                const response = await fetch(PISTON_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+                
+                const result = await response.json();
+
+                if (result.run.stderr) {
+                    outputPanel.textContent = result.run.stderr;
+                    outputPanel.classList.add('error');
+                } else {
+                    outputPanel.textContent = result.run.stdout;
+                }
+
+            } catch (error) {
+                outputPanel.textContent = `An error occurred: ${error.message}\nPlease try again later.`;
+                outputPanel.classList.add('error');
+            } finally {
+                runBtn.disabled = false;
+                runBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function saveTemplate(templateId) {
+            const code = codeEditor.value;
+            if (!code.trim()) {
+                showNotification("Cannot save an empty template.", 'error');
+                return;
+            }
+            localStorage.setItem(`coding_template_${templateId}`, code);
+            showNotification(`Template ${templateId} saved successfully!`);
+        }
+
+        function loadTemplate(templateId) {
+            const savedCode = localStorage.getItem(`coding_template_${templateId}`);
+            if (savedCode) {
+                codeEditor.value = savedCode;
+                showNotification(`Template ${templateId} loaded.`);
+            } else {
+                showNotification(`Template ${templateId} is empty. Save something first.`, 'error');
+            }
+        }
+        
+        function updateSnippets() {
+            const lang = languageSelect.value;
+            const langSnippets = SNIPPETS[lang];
+            snippetSelect.innerHTML = '';
+            
+            if (langSnippets) {
+                for (const [name, code] of Object.entries(langSnippets)) {
+                    const option = document.createElement('option');
+                    option.value = code;
+                    option.textContent = name;
+                    snippetSelect.appendChild(option);
+                }
+            }
+        }
+
+        function insertSnippet() {
+            const snippetCode = snippetSelect.value;
+            const start = codeEditor.selectionStart;
+            const end = codeEditor.selectionEnd;
+            codeEditor.value = codeEditor.value.substring(0, start) + snippetCode + codeEditor.value.substring(end);
+            codeEditor.focus();
+            codeEditor.selectionEnd = start + snippetCode.length;
+        }
+
+        function initializeEditor() {
+            const lastUsedLang = localStorage.getItem('last_language') || 'cpp';
+            languageSelect.value = lastUsedLang;
+            
+            const lastCode = localStorage.getItem('last_code');
+            if(lastCode) {
+                codeEditor.value = lastCode;
+            } else {
+                codeEditor.value = TEMPLATE_PLACEHOLDERS[lastUsedLang];
+            }
+            updateSnippets();
+        }
+
+        function showNotification(message, type = 'success') {
+            notificationMessage.textContent = message;
+            notification.className = 'fixed bottom-5 right-5 text-white py-2 px-5 rounded-lg shadow-xl';
+            if (type === 'error') {
+                notification.classList.add('bg-red-500');
+            } else {
+                notification.classList.add('bg-green-500');
+            }
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- Event Listeners ---
+        runBtn.addEventListener('click', runCode);
+        insertSnippetBtn.addEventListener('click', insertSnippet);
+
+        languageSelect.addEventListener('change', (e) => {
+            const selectedLang = e.target.value;
+            localStorage.setItem('last_language', selectedLang);
+            updateSnippets();
+            const currentCode = codeEditor.value.trim();
+            if(Object.values(TEMPLATE_PLACEHOLDERS).map(p => p.trim()).includes(currentCode)) {
+               codeEditor.value = TEMPLATE_PLACEHOLDERS[selectedLang];
+            }
+        });
+        
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('last_code', codeEditor.value);
+        });
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', initializeEditor);
+
+    </script>
+</body>
+</html>
