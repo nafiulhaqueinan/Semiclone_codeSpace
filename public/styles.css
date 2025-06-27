@@ -1,0 +1,76 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #01040d; /* bg-gray-900 */
+    color: #e5e7eb; /* text-gray-300 */
+}
+
+#code-editor {
+    width: 100%;
+    height: 100%; /* fixed height */
+    overflow: auto; /* scrollbars when needed */
+    background-color: #1e1e2f; /* dark background */
+    border-radius: 6px;
+    padding: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    color: #f8f8f2; /* bright code text */
+    white-space: pre; /* prevents code from wrapping */
+    resize: none; /* prevents resizing */
+}
+
+.panel {
+    background-color: #1F2937; /* bg-gray-800 */
+    border-color: #374151; /* border-gray-700 */
+    color: #e5e7eb; /* text-gray-300 - fixed to proper light text for dark panel */
+}
+
+.btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background-color: #3B82F6; /* bg-blue-600 */
+    color: #ffffff; /* white text */
+}
+
+.btn-primary:hover {
+    background-color: #2563EB; /* bg-blue-700 */
+}
+
+.btn-secondary {
+    background-color: #4B5563; /* bg-gray-600 */
+    color: #ffffff; /* white text */
+}
+
+.btn-secondary:hover {
+    background-color: #374151; /* bg-gray-700 */
+}
+
+.btn-success {
+    background-color: #16A34A; /* bg-green-600 */
+    color: #ffffff; /* white text */
+}
+
+.btn-success:hover {
+    background-color: #15803D; /* bg-green-700 */
+}
+
+#notification {
+    transition: opacity 0.5s, transform 0.5s;
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+#notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+#output-panel.error {
+    color: #F87171; /* text-red-400 */
+}
